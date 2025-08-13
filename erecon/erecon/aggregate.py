@@ -38,14 +38,6 @@ def recon_domain(domain: str, cfg: Config) -> Dict[str, Any]:
     return result
 
 
-essential_genesys_keys = (
-    "genesys_login_url",
-    "genesys_api_url",
-    "genesys_client_id",
-    "genesys_client_secret",
-)
-
-
 def recon_email(email: str, cfg: Config) -> Dict[str, Any]:
     result: Dict[str, Any] = {"email": email}
 
@@ -65,24 +57,5 @@ def recon_email(email: str, cfg: Config) -> Dict[str, Any]:
         result["holehe"] = hh
     except Exception as exc:  # noqa: BLE001
         result["holehe_error"] = str(exc)
-
-    # Genesys Cloud
-    if all(getattr(cfg, k) for k in essential_genesys_keys):
-        try:
-            from .genesys_cloud import GenesysClient  # local import
-
-            client = GenesysClient(
-                login_url=cfg.genesys_login_url or "",
-                api_url=cfg.genesys_api_url or "",
-                client_id=cfg.genesys_client_id or "",
-                client_secret=cfg.genesys_client_secret or "",
-                timeout=cfg.requests_timeout,
-            )
-            genesys = client.search_users_by_email(email)
-            result["genesys"] = genesys
-        except Exception as exc:  # noqa: BLE001
-            result["genesys_error"] = str(exc)
-    else:
-        result["genesys_skipped"] = True
 
     return result

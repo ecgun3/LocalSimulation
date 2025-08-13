@@ -59,10 +59,6 @@ def _print_human(data: Dict[str, Any]) -> None:
                         print("Holehe (raw):")
                         for line in raw[:10]:
                             print(f"  {line}")
-        if data.get("genesys_error"):
-            print(f"Genesys Error: {data['genesys_error']}")
-        if data.get("genesys_skipped"):
-            print("Genesys: skipped (not configured)")
         if data.get("email_patterns"):
             print("Email patterns (guesses):")
             for e in data["email_patterns"]:
